@@ -2,12 +2,15 @@
 
 namespace App\Controllers;
 
-class ApiController
+use Core\Db;
+
+abstract class ApiController
 {
-    protected $okStatus = 'ok';
-    protected $errStatus = 'error';
+    const OK_STATUS = 'ok';
+    const ERR_STATUS = 'error';    
 
     protected $method = ''; //GET|POST|PUT|DELETE
+
 
     public $requestUri = [];
     public $requestParams = [];
@@ -16,18 +19,18 @@ class ApiController
     public function __construct() {
         header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
-        header("Content-Type: application/json");
+        header("Content-Type: application/json");        
     }
 
     
 
-    protected function response($textStatus, $data, $message = '', $status = 500) {
+    protected function response($textStatus, $data, $message = '', $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
         $response = ['status' => $textStatus, 'payload' => $data, 'message' => $message];
         return json_encode($response);
     }
     
-    protected function notifyResponse($textStatus, $message = '', $status = 500) {
+    protected function notifyResponse($textStatus, $message = '', $status = 200) {
         header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
         $response = ['status' => $textStatus, 'message' => $message];
         return json_encode($response);

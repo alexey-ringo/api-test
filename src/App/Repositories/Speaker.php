@@ -1,11 +1,21 @@
 <?php
+declare(strict_type=1);
 
-namespace App\Models;
+namespace App\Repositories;
 
-use Framework\Core\Model;
+use Core\Repository;
 
-class Speaker extends Model
+/**
+ * Class Speaker
+ * @package App\Repositories 
+ */
+class Speaker extends Repository
 {
+    /**
+     * getAll
+     *
+     * @return array
+     */
     public function getAll(): array
     {
         $max = 100;
@@ -16,6 +26,13 @@ class Speaker extends Model
         return $this->db->row('SELECT * FROM Speaker ORDER BY id DESC LIMIT :max', $params);
     }
     
+    /**
+     * getById
+     *
+     * @param  int $id
+     *
+     * @return array
+     */
     public function getById($id): array
     {
 		$params = [
@@ -25,6 +42,13 @@ class Speaker extends Model
         return $this->db->row('SELECT * FROM Speaker WHERE ID = :id', $params);
     }
     
+    /**
+     * getBySessionId
+     *
+     * @param  int $id
+     *
+     * @return array
+     */
     public function getBySessionId($id): array
     {
 		$params = [

@@ -1,38 +1,47 @@
 <?php
+declare(strict_type=1);
 
 namespace App\Controllers;
 
-use App\Models\Session;
-use App\Models\Speaker;
-use Framework\Db\Db;
+use App\Repositories\Session;
+use App\Repositories\Speaker;
 
 class SessionController extends ApiController
-{
-    const OK_STATUS = 'ok';
-    const ERR_STATUS = 'error';
-    
+{    
     public function __construct()
     {
         parent::__construct();
     }
     
-    public function indexAction()
+    /**
+     * indexAction
+     *
+     * @return string
+     */
+    public function indexAction(): string
     {
         $sessions = (new Session())->getAll();
         
-        return $this->response($this->okStatus, $sessions, '', 200);
+        return $this->response($this->okStatus, $sessions, '');
     }
 
-    public function viewAction($id)
+    /**
+     * viewAction
+     *
+     * @param  mixed $id
+     *
+     * @return string
+     */
+    public function viewAction($id): string
     {
         if(!$id) {
-            return $this->notifyResponse($this->errStatus, 'Не переданы обязательные параметры!', 422);
+            return $this->notifyResponse(static::ERR_STATUS, 'Не переданы обязательные параметры!', 422);
         }
         
         $session = (new Session())->getById($id);
          
         $session['Speakers'] = (new Speaker())->getBySessionId($id);
         
-        return $this->response($this->okStatus, $session, '', 200);
+        return $this->response(static::OK_STATUS, $session, '');
     }
 }

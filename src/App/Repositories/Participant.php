@@ -1,11 +1,21 @@
 <?php
+declare(strict_type=1);
 
-namespace App\Models;
+namespace App\Repositories;
 
-use Framework\Core\Model;
+use Core\Repository;
 
-class Participant extends Model
+/**
+ * Class Participant
+ * @package App\Repositories 
+ */
+class Participant extends Repository
 {
+    /**
+     * getAll
+     *
+     * @return array
+     */
     public function getAll(): array
     {
         $max = 100;
@@ -16,6 +26,13 @@ class Participant extends Model
         return $this->db->row('SELECT * FROM Participant ORDER BY ID DESC LIMIT :max', $params);
     }
     
+    /**
+     * getById
+     *
+     * @param  int $id
+     *
+     * @return array
+     */
     public function getById($id): array
     {
 		$params = [
@@ -25,6 +42,13 @@ class Participant extends Model
         return $this->db->row('SELECT * FROM Participant WHERE ID = :id', $params);
     }
     
+    /**
+     * getByEmail
+     *
+     * @param  string $email
+     *
+     * @return array
+     */
     public function getByEmail($email): array
     {
 		$params = [

@@ -1,11 +1,21 @@
 <?php
+declare(strict_type=1);
 
-namespace App\Models;
+namespace App\Repositories;
 
-use Framework\Core\Model;
+use Core\Repository;
 
-class Session extends Model
+/**
+ * Class Session
+ * @package App\Repositories 
+ */
+class Session extends Repository
 {
+    /**
+     * getAll
+     *
+     * @return array
+     */
     public function getAll(): array
     {
         $max = 100;
@@ -21,6 +31,13 @@ class Session extends Model
         
     }
     
+    /**
+     * getById
+     *
+     * @param  int $id
+     *
+     * @return array
+     */
     public function getById($id): array
     {
 		$params = [

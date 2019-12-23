@@ -1,40 +1,51 @@
 <?php
+declare(strict_type=1);
 
 namespace App\Controllers;
 
-use App\Models\News;
-use Framework\Db\Db;
+use App\Repositories\News;
 
 class NewsController extends ApiController
-{   
-    //define ("OK_STATUS", "ok");
-    const OK_STATUS = 'ok';
-    const ERR_STATUS = 'error';
-    
+{       
     public function __construct()
     {
         parent::__construct();
     }
 
     
-    public function indexAction()
+    /**
+     * indexAction
+     *
+     * @return string
+     */
+    public function indexAction(): string
     {
-        $news = (new News())->getAll();
+        $news = (new News())->getAll();        
        
-        return $this->response($this->okStatus, $news, 'Список новостей', 200);
+        return $this->response(static::OK_STATUS, $news, 'Список новостей');
       
     }
 
     
-    public function viewAction($id)
+    /**
+     * viewAction
+     *
+     * @param  int $id
+     *
+     * @return string
+     */
+    public function viewAction($id): string
     {
         if(!$id) {
-            return $this->notifyResponse($this->errStatus, 'Не переданы обязательные параметры!', 422);
+            return $this->notifyResponse(static::ERR_STATUS, 'Не переданы обязательные параметры!', 422);
+        }
+
+        $news = (new News())->getById($id);
+
+        if(empty($news)) {
+            return $this->notifyResponse(static::ERR_STATUS, 'Новость ' . $id . ' не найдена!', 404);
         }
         
-        $news = (new News())->getById($id);
-        
-        return $this->response($this->okStatus, $news, 'Новость № '. $id, 200);
-    }
-   
+        return $this->response(static::OK_STATUS, $news, 'Новость № '. $id);
+    }   
 }

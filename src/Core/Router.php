@@ -1,14 +1,42 @@
 <?php
-namespace Framework\Core;
+declare(strict_type=1);
+
+namespace Core;
 
 use App\Controllers;
 use Exception;
 
+/**
+ * Class Router
+ * @package Core 
+ */
 class Router {
+    /**
+     * routes
+     *
+     * @var array
+     */
     protected $routes = [];
+
+    /**
+     * params
+     *
+     * @var array
+     */
     protected $params = [];
+
+    /**
+     * method
+     *
+     * @var string
+     */
     protected $method = ''; //GET|POST|PUT|DELETE
     
+    /**
+     * urlParam
+     *
+     * @var string
+     */
     protected $urlParam;
     
     public function __construct() {
@@ -25,13 +53,28 @@ class Router {
         header("Content-Type: application/json");
     }
     
-    public function add($route, $params) {
+    /**
+     * add
+     *
+     * @param  mixed $route
+     * @param  mixed $params
+     *
+     * @return void
+     */
+    public function add($route, $params): void 
+    {
         $route = preg_replace('/{([a-z]+):([^\}]+)}/', '(?P<\1>\2)', $route);
         $route = '#^'.$route.'$#';
         $this->routes[$route] = $params;
     }
     
-    public function match() {
+    /**
+     * match
+     *
+     * @return bool
+     */
+    public function match(): bool 
+    {
         $url = trim($_SERVER['REQUEST_URI'], '/');
         foreach ($this->routes as $route => $params) {
             if (preg_match($route, $url, $matches)) {
@@ -45,13 +88,16 @@ class Router {
                     }
                 }
                 $this->params = $params;
+
                 return true;
             }
         }
+        
         return false;
     }
     
-    public function run(){
+    public function run()
+    {
         if ($this->method !== 'POST') {
             //throw new Exception("Forbidden Method");
             return $this->notifyResponse('error', 'Метод запроса не соответствует требуемому методу POST!', 422);
@@ -74,13 +120,16 @@ class Router {
         }
     }
     
-    private function notifyResponse($textStatus, $message = '', $status = 500) {
+    private function notifyResponse($textStatus, $message = '', $status = 500) 
+    {
         header("HTTP/1.1 " . $status . " " . $this->requestStatus($status));
         $response = ['status' => $textStatus, 'message' => $message];
+        
         return json_encode($response);
     }
     
-    private function requestStatus($code) {
+    private function requestStatus($code) 
+    {
         $status = array(
             200 => 'OK',
             404 => 'Not Found',
@@ -88,6 +137,7 @@ class Router {
             422 => 'Unprocessable Entity',
             500 => 'Internal Server Error',
         );
+
         return ($status[$code])?$status[$code]:$status[500];
     }
 }

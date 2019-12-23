@@ -1,11 +1,21 @@
 <?php
+declare(strict_type=1);
 
-namespace App\Models;
+namespace App\Repositories;
 
-use Framework\Core\Model;
+use Core\Repository;
 
-class News extends Model
+/**
+ * Class News
+ * @package App\Repositories 
+ */
+class News extends Repository
 {
+    /**
+     * getAll
+     *
+     * @return array
+     */
     public function getAll(): array
     {
         $max = 100;
@@ -16,6 +26,13 @@ class News extends Model
         return $this->db->row('SELECT * FROM News ORDER BY ID DESC LIMIT :max', $params);
     }
     
+    /**
+     * getById
+     *
+     * @param  int $id
+     *
+     * @return array
+     */
     public function getById($id): array
     {
         $max = 100;

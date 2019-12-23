@@ -1,8 +1,9 @@
 <?php
+declare(strict_type=1);
 
 namespace App\Controllers;
 
-use App\Models\Participant;
+use App\Repositories\Participant;
 
 class ParticipantController extends ApiController
 {
@@ -12,26 +13,38 @@ class ParticipantController extends ApiController
         parent::__construct();
     }
     
-    const OK_STATUS = 'ok';
-    const ERR_STATUS = 'error';
-
-    
-    public function indexAction()
+    /**
+     * indexAction
+     *
+     * @return string
+     */
+    public function indexAction(): string
     {
         $participants = (new Participant())->getAll();
         
-        return $this->response($this->okStatus, $participants, '', 200);
+        return $this->response(static::OK_STATUS, $participants, '');
         
     }
 
-    public function viewAction($id)
+    /**
+     * viewAction
+     *
+     * @param  mixed $id
+     *
+     * @return string
+     */
+    public function viewAction($id): string
     {
         if(!$id) {
-             return $this->notifyResponse($this->errStatus, 'Не переданы обязательные параметры!', 422);
+             return $this->notifyResponse(static::ERR_STATUS, 'Не переданы обязательные параметры!', 422);
         }
         
         $participant = (new Participant())->getById($id);
+
+        if(empty($participant)) {
+            return $this->notifyResponse(static::ERR_STATUS, 'Новость ' . $participant . ' не найден!', 404);
+        }
         
-        return $this->response($this->okStatus, $participant, '', 200);
+        return $this->response(static::OK_STATUS, $participant, '');
     }
 }

@@ -1,11 +1,24 @@
 <?php
+declare(strict_type=1);
 
-namespace App\Models;
+namespace App\Repositories;
 
-use Framework\Core\Model;
+use Core\Repository;
 
-class Subscribe extends Model
+/**
+ * Class Subscribe
+ * @package App\Repositories 
+ */
+class Subscribe extends Repository
 {
+    /**
+     * create
+     *
+     * @param  int $participantId
+     * @param  int $sessionId
+     *
+     * @return bool
+     */
     public function create($participantId, $sessionId): bool
     {
 		$params = [
